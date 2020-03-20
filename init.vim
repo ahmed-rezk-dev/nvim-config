@@ -37,7 +37,6 @@ Plug 'sonph/onehalf', {'rtp': 'vim/'}
 Plug 'HerringtonDarkholme/yats.vim' " TS Syntax
 
 Plug 'mattn/emmet-vim'
-"Plug 'dense-analysis/ale'
 Plug 'vim-airline/vim-airline'
 Plug 'drewtempelmeyer/palenight.vim'
 
@@ -49,12 +48,6 @@ call plug#end()
 
 " Workspace config
 let g:workspace_autosave_always = 1
-
-" Eslint config
-"let g:ale_sign_error = '❌'
-"let g:ale_sign_warning = '⚠️'
-"let g:ale_fix_on_save = 1
-"let b:ale_fixers = {'javascript': ['prettier', 'eslint']}
 
 inoremap jk <ESC>
 nmap <C-n> :NERDTreeToggle<CR>
@@ -110,8 +103,8 @@ set expandtab
 
 
 " Theme Settigns
-"syntax on
-"set t_Co=256
+syntax on
+set t_Co=256
 set cursorline
 set cursorcolumn
 colorscheme onehalfdark
@@ -137,7 +130,7 @@ endif
 
 " sync open file with NERDTree
 " " Check if NERDTree is open or active
-function! IsNERDTreeOpen()        
+function! IsNERDTreeOpen()
   return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
 endfunction
 

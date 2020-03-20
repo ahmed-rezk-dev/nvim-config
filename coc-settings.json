@@ -17,7 +17,7 @@
     "typescriptreact",
     "javascriptreact"
   ],
-  "diagnostic.errorSign": "•",
-  "diagnostic.warningSign": "•",
-  "diagnostic.infoSign": "•"
+  "diagnostic.errorSign": "❌",
+  "diagnostic.warningSign": "⚠️'",
+  "diagnostic.infoSign": "💡"
 }
