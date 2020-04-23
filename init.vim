@@ -1,6 +1,10 @@
 " Specify a directory for plugins
 call plug#begin('~/.vim/plugged')
 
+if exists('g:vscode')
+    " VSCode extension
+else
+    " ordinary neovim
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'scrooloose/nerdtree'
 " Plug 'tsony-tsonev/nerdtree-git-plugin'
@@ -18,7 +22,27 @@ Plug 'christoomey/vim-tmux-navigator'
 "Syntaxs
 Plug 'mxw/vim-jsx'
 Plug 'pangloss/vim-javascript'
+" Search in files
+Plug 'dyng/ctrlsf.vim'
 
+"CtrlSF Setting
+if has("macunix")
+  let g:ctrlsf_ackprg = '/usr/local/bin/rg'
+elseif has("unix")
+  let g:ctrlsf_ackprg = '/usr/bin/rg'
+endif
+let g:ctrlsf_winsize = '33%'
+let g:ctrlsf_auto_close = 0
+let g:ctrlsf_confirm_save = 0
+let g:ctrlsf_auto_focus = {
+    \ 'at': 'start',
+    \ }
+nmap <leader>a :CtrlSF -R ""<Left>
+nmap <leader>A <Plug>CtrlSFCwordPath -W<CR>
+nmap <leader>c :CtrlSFFocus<CR>
+nmap <leader>C :CtrlSFToggle<CR>
+" Substitute the word under the cursor.
+nmap <leader>s :%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>
 
 " Themes
 Plug 'morhetz/gruvbox'
@@ -44,6 +68,21 @@ Plug 'drewtempelmeyer/palenight.vim'
 
 Plug 'thaerkh/vim-workspace'
 " Initialize plugin system
+
+
+"------------ PHP Plugins -------------"
+Plug 'SirVer/ultisnips'
+  Plug 'ncm2/ncm2'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+
+  Plug 'phpactor/phpactor', { 'do': ':call phpactor#Update()', 'for': 'php'}
+  Plug 'phpactor/ncm2-phpactor', {'for': 'php'}
+  Plug 'ncm2/ncm2-ultisnips'
+  " Plug 'SirVer/ultisnips' should have been already added in previous
+  " section
+Plug 'StanAngeloff/php.vim', {'for': 'php'}
+"Plug 'dense-analysis/ale'
 call plug#end()
 
 " Workspace config
@@ -147,11 +186,11 @@ endfunction
 autocmd BufEnter * call SyncTree()
 
 " coc config
-let g:coc_global_extensions = [
+"let g:coc_global_extensions = [
   \ 'coc-snippets',
   \ 'coc-pairs',
   \ 'coc-tsserver',
-  \ 'coc-eslint', 
+  \ 'coc-eslint',
   \ 'coc-prettier',
   \ 'coc-json',
   \ 'coc-emmet '
@@ -277,8 +316,54 @@ nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
+"-------------Mappings--------------"
+
+"Make it easy to edit the Vimrc file.
+nmap <Leader>ev :tabedit $MYVIMRC<cr>
 
 
 
+"-------------Laravel-Specific--------------"
+nmap <Leader>lr :e routes/web.php<cr>
+nmap <Leader>lm :!php artisan make:
+nmap <Leader><Leader>c :e app/Http/Controllers/<cr>
+nmap <Leader><Leader>m :CtrlP<cr>app/
+nmap <Leader><Leader>v :e resources/views/<cr>
+
+augroup ncm2
+  au!
+  autocmd BufEnter * call ncm2#enable_for_buffer()
+  au User Ncm2PopupOpen set completeopt=noinsert,menuone,noselect
+  au User Ncm2PopupClose set completeopt=menuone
+augroup END
+
+" parameter expansion for selected entry via Enter
+inoremap <silent> <expr> <CR> (pumvisible() ? ncm2_ultisnips#expand_or("\<CR>", 'n') : "\<CR>")
+
+"" cycle through completion entries with tab/shift+tab
+inoremap <expr> <TAB> pumvisible() ? "\<c-n>" : "\<TAB>"
+inoremap <expr> <s-tab> pumvisible() ? "\<c-p>" : "\<TAB>"
+" disable linting while typing
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_enter = 0
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+let g:ale_open_list = 1
+let g:ale_keep_list_window_open=0
+let g:ale_set_quickfix=0
+let g:ale_list_window_size = 5
+let g:ale_php_phpcbf_standard='PSR2'
+let g:ale_php_phpcs_standard='phpcs.xml.dist'
+let g:ale_php_phpmd_ruleset='phpmd.xml'
+let g:ale_fixers = {
+  \ '*': ['remove_trailing_lines', 'trim_whitespace'],
+  \ 'php': ['phpcbf', 'php_cs_fixer', 'remove_trailing_lines', 'trim_whitespace'],
+  \}
+let g:ale_fix_on_save = 1
+let g:ale_sign_error = '>>'
+let g:ale_sign_warning = '--'
 
 
+"Arabic langauge setting
+	set encoding=utf-8
+	set arabicshape
+endif
